@@ -5,8 +5,10 @@ import { Controlled as ControlledEditor } from 'react-codemirror2';
 const Editor = (props) => {
     const { title, language, code } = props;
 
-    const handleChange = () => {
-        props.handleCodeChange(language, code);
+    // console.log(language);
+
+    const handleChange = (editor, data, value) => {
+        props.handleCodeChange(language, value);
         // console.log(code);
     }
 
@@ -20,7 +22,6 @@ const Editor = (props) => {
             <div className = 'editor-body'>
                 <ControlledEditor
                     onBeforeChange = {handleChange}
-                    
                     className = 'code-mirror-wrapper'
                     value = {code}
                     options = {{

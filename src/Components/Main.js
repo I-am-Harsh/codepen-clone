@@ -14,30 +14,29 @@ class Main extends Component {
     }
 
     handleCodeChange = (lang, code) => {
-        console.log(lang === 'xml');
-        // console.log(code);
-        switch(lang){
-            case lang === 'xml':
-                console.log("insdoe")
+        console.log(code);
+        switch(true){
+            case (lang === 'xml'):
+                console.log("inside");
                 this.setState({
-                    html : code
+                    xml : code
                 })
                 break;
 
-            case lang === 'css':
+            case (lang === 'css'):
                 this.setState({
                     css : code
                 })
                 break;
 
-            case lang === 'js':
+            case (lang === 'js'):
                 this.setState({
                     js : code
                 })
                 break;
 
             default :
-                console.log('defualt');
+                console.log('default');
                 break;
         }
 
