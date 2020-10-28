@@ -7,9 +7,9 @@ class Main extends Component {
         super(props);
 
         this.state = {
-            xml : '',
-            css : '',
-            js : ''
+            xml : undefined,
+            css : undefined,
+            js : undefined
         }
     }
 
@@ -46,14 +46,14 @@ class Main extends Component {
     render() {
         const { xml, css, js } = this.state;
         return (
-            <div>
+            <div className = 'main'>
                 <div className = 'editor'>
                     <Editor handleCodeChange = {this.handleCodeChange} language = "xml" title = "HTML" code = {xml}/>
                     <Editor handleCodeChange = {this.handleCodeChange} language = 'css' title = "CSS" code = {css} />
                     <Editor handleCodeChange = {this.handleCodeChange} language = 'js' title = "JS" code = {js} />
                 </div>
                 <div className = 'output'>
-                    <Output/>
+                    <Output xml = {xml} css = {css} js = {js}/>
                 </div>
             </div>
         )

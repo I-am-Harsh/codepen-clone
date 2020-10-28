@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Controlled as ControlledEditor } from 'react-codemirror2';
+import React from 'react';
+import { Controlled as ControlledEditor, UnControlled } from 'react-codemirror2';
+import debounce from 'lodash/debounce';
 
 
 const Editor = (props) => {
@@ -9,8 +10,8 @@ const Editor = (props) => {
 
     const handleChange = (editor, data, value) => {
         props.handleCodeChange(language, value);
-        // console.log(code);
     }
+
 
 
     return(
@@ -20,10 +21,21 @@ const Editor = (props) => {
                 <button className = 'button'>X</button>
             </div>
             <div className = 'editor-body'>
-                <ControlledEditor
+                {/* <ControlledEditor
                     onBeforeChange = {handleChange}
                     className = 'code-mirror-wrapper'
                     value = {code}
+                    options = {{
+                        lineWrapping : true,
+                        lint : true,
+                        mode : language,
+                        lineNumbers : true,
+                        theme : "material"
+                    }}
+                /> */}
+                <UnControlled
+                    onChange = {debounce(handleChange, 750)}
+                    className = 'code-mirror-wrapper'
                     options = {{
                         lineWrapping : true,
                         lint : true,

@@ -1,13 +1,19 @@
+.main{
+  height: 100%;
+  width : 100%;
+}
+
 .output {
   width : 100%;
-  height : 50%;
+  height : 50vh;
 }
 
 .editor {
   width : 100%;
-  height : 50%;
+  height : 50vh;
   display : flex;
   flex-direction: row;
+  flex : 1;
   background-color: #333642;
 }
 
@@ -27,11 +33,6 @@
   border-top-right-radius: 5px;
 }
 
-.output{
-  background-color: wheat;
-  width : 100%;
-  height : 100%;
-}
 
 .button {
   background-color: rgba(0,0,0,0.1);

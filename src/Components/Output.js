@@ -2,8 +2,8 @@ import React from 'react';
 
 
 const Output = (props) => {
-    const { html = "<p>Use the editor</p>", css, js} = props;
-
+    const { xml = "<h1>Use Editor</h1>", css = "", js = ""} = props;
+    console.log(xml);
     const srcDoc = `
         <html>
             <head>
@@ -12,7 +12,7 @@ const Output = (props) => {
                 </style>
             </head>
             <body>
-                ${html}
+                ${xml}
                 <script>
                     ${js}
                 </script>
