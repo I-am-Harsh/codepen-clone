@@ -43,6 +43,7 @@ const Editor = (props) => {
                         lineNumbers : true,
                         theme : "material"
                     }}
+                    value = {code}
                 />
             </div>
         </div>
