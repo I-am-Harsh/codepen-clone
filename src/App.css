@@ -1,56 +1,91 @@
-.main{
+.body{
   height: 100%;
-  width : 100%;
 }
 
-.output {
-  width : 100%;
-  height : 50vh;
-}
-
-.editor {
-  width : 100%;
-  height : 50vh;
+.main {
   display : flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.editor-outer{
+  flex-grow: 1;
+  flex-basis: auto;
+  display: flex;
   flex-direction: row;
-  flex : 1;
-  background-color: #333642;
+  background-color: #333642;;
+}
+
+.output{
+  flex-grow: 1;
+  flex-basis: auto;
+  height: 100%;
+  background-color: aqua;
+  /* resize: both; */
+  overflow: hidden;
 }
 
 .editor-container{
+  flex-direction: column;
   flex : 1;
-  flex-grow: 1;
-  margin: 10px;
+  margin : 10px;
 }
 
-.editor-header {
+.Codemirror{
+  height: 100% !important;
+}
+
+.editor-container-min{
+  background-color: bisque;
+}
+
+.editor-header{
   display: flex;
   justify-content: space-between;
+  background-color:rgba(0,0,0,0.5);
   color: white;
-  background-color:rgba(0,0,0,0.1);
-  padding-bottom: .1px;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 
 
 .button {
-  background-color: rgba(0,0,0,0.1);
+  background-color: rgba(0,0,0,0.5);
   color : white;
   border: 0px;
+  border-top-right-radius: 10px;
 }
 
-    
-/* Header/Logo Title */
-.landing-header {
-  padding: 60px;
-  text-align: center;
-  background: #1abc9c;
-  color: white;
-  font-size: 30px;
+
+
+
+
+.outer-test{
+  background-color: green;
+  /* display: flex; */
+  /* flex-direction: column; */
+  height: 100%;
+  width: 100%;
 }
-    
-/* Page Content */
-.landing-content {
-  padding:20px;
+
+.inner{
+  background-color: aqua;
+  /* flex-grow: 1; */
+  /* position: absolute; */
+  /* top : 0; */
+  /* bottom: 50%; */
+  /* right : 0;
+  left : 0; */
+  height: 200vh;
+}
+
+.inner-2{
+  background-color: red;
+  /* flex-grow: 1; */
+  /* height: 50%; */
+  z-index: 2;
+  position: fixed;
+  top : 0;
+  right : 0;
+  left : 0;
 }

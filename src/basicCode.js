@@ -1,6 +1,5 @@
 export const xml = 
-`
-<div>
+`<div>
     <div class="header">
         <h1>Web Editor</h1>
         <p>Develop website on the go</p>
@@ -17,8 +16,7 @@ export const xml =
 `
 
 export const css = 
-`
-body {
+`body {
     font-family: Arial;
     margin: 0;
 }
