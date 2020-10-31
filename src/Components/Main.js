@@ -24,9 +24,9 @@ class Main extends Component {
 
 
     handleCodeChange = (lang, code) => {
+        console.log('fucntion called');
         switch(true){
             case (lang === 'xml'):
-                console.log("inside");
                 this.setState({
                     xml : code
                 })
@@ -51,27 +51,27 @@ class Main extends Component {
 
         const { xml, css, js } = this.state;
 
-        this.socket.emit('update code', (this.url, xml, css, js))
+        // this.socket.emit('update code', (this.url, xml, css, js))
     }
 
     componentDidMount(){
         // current window url
-        this.url = window.location.pathname.substr(6);
+        // this.url = window.location.pathname.substr(6);
 
-        // dial connection
-        this.socket = io.connect(process.env.REACT_APP_API || window.location.hostname + ":9000");
+        // // dial connection
+        // this.socket = io.connect(process.env.REACT_APP_API || window.location.hostname + ":9000");
 
-        // check url with server
-        this.socket.emit('checkUrl', window.location.pathname.substr(6))
+        // // check url with server
+        // this.socket.emit('checkUrl', window.location.pathname.substr(6))
 
-        // get updated code - 
-        this.socket.on('updated code', (xml, css, js) => {
-            this.setState({
-                xml : xml,
-                css : css,
-                js : js
-            })
-        })
+        // // get updated code - 
+        // this.socket.on('updated code', (xml, css, js) => {
+        //     this.setState({
+        //         xml : xml,
+        //         css : css,
+        //         js : js
+        //     })
+        // })
 
     }
 
@@ -85,11 +85,9 @@ class Main extends Component {
                     <Route exact path = '/code/*'>
                     <div className = 'main'>
                         <div className = 'editor-outer'>
-                            <Editor handleCodeChange = {this.debounceChange} language = "xml" title = "HTML" code = {xml}/>
-                            <div className = 'resizer'></div>
-                            <Editor handleCodeChange = {this.handleCodeChange} language = 'css' title = "CSS" code = {css} />
-                            <div className = 'resizer'></div>
-                            <Editor handleCodeChange = {this.handleCodeChange} language = 'js' title = "JS" code = {js} />
+                            <Editor handleCodeChange = {this.debounceChange} language = "xml" title = "HTML" code = {xml} />
+                            <Editor handleCodeChange = {this.debounceChange} language = 'css' title = "CSS" />
+                            <Editor handleCodeChange = {this.debounceChange} language = 'js' title = "JS" />
                         </div>
                         <div className = 'output'>
                             <Output xml = {xml} css = {css} js = {js}/>

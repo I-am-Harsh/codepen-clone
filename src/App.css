@@ -45,6 +45,7 @@ body {
 .editor-container{
   flex-direction: column;
   flex : 1;
+  display: flex;
   margin : 10px;
 }
 
@@ -60,20 +61,16 @@ body {
 
 .CodeMirror{
   height: 100% !important;
-  /* overflow: hidden; */
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   
 }
 
-.editor-container-min{
-  background-color: bisque;
-}
 
 .editor-header{
   display: flex;
   justify-content: space-between;
-  background-color:rgba(0,0,0,0.5);
+  background-color: hsl(225, 6%, 25%);
   color: white;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;

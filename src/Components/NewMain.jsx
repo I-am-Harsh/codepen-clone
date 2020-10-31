@@ -1,60 +1,67 @@
 import React, { useState, useEffect } from 'react';
 import Editor from './NewEditor'
 
-function NewMain() {
-  const [html, setHtml] = useState('')
-  const [css, setCss] = useState('')
-  const [js, setJs] = useState('')
-  const [srcDoc, setSrcDoc] = useState('')
+import { xml, css as scss } from '../basicCode';
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setSrcDoc(`
+function NewMain() {
+    const [html, setHtml] = useState(xml)
+    const [css, setCss] = useState(scss)
+    const [js, setJs] = useState('')
+    const [srcDoc, setSrcDoc] = useState('')
+
+    useEffect(() => {
+        
+        const timeout = setTimeout(() => {
+            setSrcDoc(`
         <html>
           <body>${html}</body>
           <style>${css}</style>
           <script>${js}</script>
         </html>
       `)
-    }, 250)
+        }, 550)
 
-    return () => clearTimeout(timeout)
-  }, [html, css, js])
+        return () => clearTimeout(timeout)
+    }, [html, css, js])
 
-  return (
-    <>
-      <div className="pane top-pane">
-        <Editor
-          language="xml"
-          displayName="HTML"
-          value={html}
-          onChange={setHtml}
-        />
-        <Editor
-          language="css"
-          displayName="CSS"
-          value={css}
-          onChange={setCss}
-        />
-        <Editor
-          language="javascript"
-          displayName="JS"
-          value={js}
-          onChange={setJs}
-        />
-      </div>
-      <div className="pane">
-        <iframe
-          srcDoc={srcDoc}
-          title="output"
-          sandbox="allow-scripts"
-          frameBorder="0"
-          width="100%"
-          height="100%"
-        />
-      </div>
-    </>
-  )
+    useEffect(() => {
+
+    })
+
+    return (
+        <>
+            <div className="pane top-pane">
+                <Editor
+                    language="xml"
+                    displayName="HTML"
+                    value={html}
+                    onChange={setHtml}
+                />
+                <Editor
+                    language="css"
+                    displayName="CSS"
+                    value={css}
+                    onChange={setCss}
+                />
+                <Editor
+                    language="javascript"
+                    displayName="JS"
+                    value={js}
+                    onChange={setJs}
+                />
+            </div>
+            <div className="pane">
+                <iframe
+                    srcDoc={srcDoc}
+                    title="output"
+                    sandbox="allow-scripts"
+                    frameBorder="0"
+                    width="100%"
+                    height="100%"
+                />
+            </div>
+        </>
+    )
 }
 
 export default NewMain;

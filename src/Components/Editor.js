@@ -1,10 +1,23 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { UnControlled } from 'react-codemirror2';
+import { UnControlled, Controlled } from 'react-codemirror2';
 import debounce from 'lodash/debounce';
+
+import { xml, css } from '../basicCode';
 
 // 8120100314
 const Editor = (props) => {
-    const { title, language, code } = props;
+    const { title, language } = props;
+    const code = () => {
+        if(language === "xml"){
+            return xml;
+        }
+        else if(language === "css"){
+            return css;
+        }
+        else{
+            return "";
+        }
+    } 
 
     const [className, setClassName]  = useState('editor-container');
 
@@ -12,7 +25,7 @@ const Editor = (props) => {
     const minimize = () => {
         console.log('minimized');
         if(className === 'editor-container'){
-            setClassName('editor-container-min')
+            setClassName('editor-container collapsed')
         }
         else{
             setClassName('editor-container')
@@ -27,11 +40,11 @@ const Editor = (props) => {
         <div className = {className}>
             <div className = 'editor-header pl-3'>
                 {title}
-                <button className = 'button' onClick = {minimize}>X</button>
+                <button className = 'button' onClick = {minimize}>-</button>
             </div>
             <div className = 'editor-body'>
                 <UnControlled
-                    onChange = {handleChange}
+                    onChange = {(editor, data, value) => handleChange(editor, data, value)}
                     className = 'code-mirror-wrapper'
                     options = {{
                         lineWrapping : true,
@@ -40,7 +53,7 @@ const Editor = (props) => {
                         lineNumbers : true,
                         theme : "material"
                     }}
-                    value = {code}
+                    value = {code()}
                 />
             </div>
         </div>
