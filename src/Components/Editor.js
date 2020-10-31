@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { UnControlled } from 'react-codemirror2';
 import debounce from 'lodash/debounce';
 
@@ -8,9 +8,6 @@ const Editor = (props) => {
 
     const [className, setClassName]  = useState('editor-container');
 
-    const handleChange = (editor, data, value) => {
-        props.handleCodeChange(language, value);
-    }
 
     const minimize = () => {
         console.log('minimized');
@@ -22,6 +19,10 @@ const Editor = (props) => {
         }
     }
 
+    const handleChange = (editor, data, value) => {
+        props.handleCodeChange(language, value);
+    }
+
     return(
         <div className = {className}>
             <div className = 'editor-header pl-3'>
@@ -30,7 +31,7 @@ const Editor = (props) => {
             </div>
             <div className = 'editor-body'>
                 <UnControlled
-                    onChange = {debounce(handleChange, 750)}
+                    onChange = {handleChange}
                     className = 'code-mirror-wrapper'
                     options = {{
                         lineWrapping : true,

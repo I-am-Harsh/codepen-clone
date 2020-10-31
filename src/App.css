@@ -1,11 +1,29 @@
-.body{
-  height: 100%;
+body {
+  font-family: Arial;
+  margin: 0;
+}
+  
+/* Header/Logo Title */
+.header {
+  padding: 60px;
+  text-align: center;
+  background: #1abc9c;
+  color: white;
+  font-size: 30px;
+}
+  
+/* Page Content */
+.content {
+  padding:20px;
 }
 
+
+/* ewditor stuff */
 .main {
   display : flex;
   flex-direction: column;
   height: 100vh;
+  overflow: hidden;
 }
 
 .editor-outer{
@@ -13,16 +31,15 @@
   flex-basis: auto;
   display: flex;
   flex-direction: row;
-  background-color: #333642;;
+  height: 50%;
+  background-color: #333642;
+  overflow: hidden;
 }
 
 .output{
   flex-grow: 1;
   flex-basis: auto;
-  height: 100%;
-  background-color: aqua;
-  /* resize: both; */
-  overflow: hidden;
+  height: 50%;
 }
 
 .editor-container{
@@ -31,8 +48,22 @@
   margin : 10px;
 }
 
-.Codemirror{
+.editor-body{
   height: 100% !important;
+  padding-bottom: 5%;
+}
+
+.code-mirror-wrapper{
+  height: 100%;
+  
+}
+
+.CodeMirror{
+  height: 100% !important;
+  /* overflow: hidden; */
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  
 }
 
 .editor-container-min{
@@ -61,31 +92,23 @@
 
 
 .outer-test{
-  background-color: green;
-  /* display: flex; */
-  /* flex-direction: column; */
+  display: flex;
+  flex-direction: column;
   height: 100%;
   width: 100%;
 }
 
 .inner{
-  background-color: aqua;
-  /* flex-grow: 1; */
-  /* position: absolute; */
-  /* top : 0; */
-  /* bottom: 50%; */
-  /* right : 0;
-  left : 0; */
-  height: 200vh;
+  background-color: grey;
+  flex-grow: 1;
+  height: 50vh;
+  width: 50%;
 }
 
 .inner-2{
-  background-color: red;
-  /* flex-grow: 1; */
-  /* height: 50%; */
-  z-index: 2;
-  position: fixed;
-  top : 0;
-  right : 0;
-  left : 0;
+  background-color: black;
+  flex-grow: 1;
+  height: 50vh;
+  color: aliceblue;
+  width: 50%;
 }

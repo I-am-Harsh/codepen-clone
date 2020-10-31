@@ -6,11 +6,11 @@ import 'codemirror/mode/xml/xml'
 import 'codemirror/mode/javascript/javascript'
 import 'codemirror/mode/css/css'
 
-import Main from './Components/Main';
+import NewMain from './Components/NewMain';
 
 function App() {
 	return (
-		<Main/>
+		<NewMain/>
 	);
 }
 

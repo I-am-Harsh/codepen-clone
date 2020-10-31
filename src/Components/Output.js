@@ -3,7 +3,6 @@ import React from 'react';
 
 const Output = (props) => {
     const { xml = "<h1>Use Editor</h1>", css = "", js = ""} = props;
-    console.log(xml);
     const srcDoc = `
         <html>
             <head>
