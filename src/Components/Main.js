@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import { ResizableBox, Resizable } from 'react-resizable';
+// import { ResizableBox, Resizable } from 'react-resizable';
 import io from 'socket.io-client';
 import  debounce  from "lodash/debounce";
 
@@ -50,28 +50,31 @@ class Main extends Component {
         }
 
         const { xml, css, js } = this.state;
-
-        // this.socket.emit('update code', (this.url, xml, css, js))
+        // console.log(xml);
+        const url = this.url;
+        this.socket.emit('update code', ({url, xml, css, js}))
     }
 
     componentDidMount(){
         // current window url
-        // this.url = window.location.pathname.substr(6);
+        this.url = window.location.pathname.substr(6);
 
-        // // dial connection
-        // this.socket = io.connect(process.env.REACT_APP_API || window.location.hostname + ":9000");
+        // dial connection
+        this.socket = io.connect(process.env.REACT_APP_API || window.location.hostname + ":9000");
+        console.log(this.socket);
 
-        // // check url with server
-        // this.socket.emit('checkUrl', window.location.pathname.substr(6))
+        // check url with server
+        this.socket.emit('checkUrl', window.location.pathname.substr(6))
 
-        // // get updated code - 
-        // this.socket.on('updated code', (xml, css, js) => {
-        //     this.setState({
-        //         xml : xml,
-        //         css : css,
-        //         js : js
-        //     })
-        // })
+        // get updated code - 
+        this.socket.on('updated code', (text) => {
+            console.log(text);
+            this.setState({
+                xml : text.xml,
+                css : text.css,
+                js : text.js
+            })
+        })
 
     }
 
@@ -85,7 +88,7 @@ class Main extends Component {
                     <Route exact path = '/code/*'>
                     <div className = 'main'>
                         <div className = 'editor-outer'>
-                            <Editor handleCodeChange = {this.debounceChange} language = "xml" title = "HTML" code = {xml} />
+                            <Editor handleCodeChange = {this.debounceChange} language = "xml" title = "HTML" />
                             <Editor handleCodeChange = {this.debounceChange} language = 'css' title = "CSS" />
                             <Editor handleCodeChange = {this.debounceChange} language = 'js' title = "JS" />
                         </div>
@@ -102,3 +105,11 @@ class Main extends Component {
 }
 
 export default Main;
+
+
+
+steps -->
+1. connect to socket
+2. pass it down to each Editor
+3. inside the editor, maintain state on the basis of language
+4. emit separate code to individual lang channel

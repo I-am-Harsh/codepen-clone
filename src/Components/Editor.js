@@ -1,6 +1,6 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { UnControlled, Controlled } from 'react-codemirror2';
-import debounce from 'lodash/debounce';
+import React, { useState} from 'react';
+import { UnControlled } from 'react-codemirror2';
+
 
 import { xml, css } from '../basicCode';
 
@@ -25,7 +25,7 @@ const Editor = (props) => {
     const minimize = () => {
         console.log('minimized');
         if(className === 'editor-container'){
-            setClassName('editor-container collapsed')
+            setClassName('editor-container min')
         }
         else{
             setClassName('editor-container')
@@ -40,7 +40,7 @@ const Editor = (props) => {
         <div className = {className}>
             <div className = 'editor-header pl-3'>
                 {title}
-                <button className = 'button' onClick = {minimize}>-</button>
+                {/* <button className = 'button' onClick = {minimize}>-</button> */}
             </div>
             <div className = 'editor-body'>
                 <UnControlled

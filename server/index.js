@@ -49,13 +49,15 @@ io.on('connection', (socket) => {
                 socket.join(url, () => console.log("joined new : ", url))
             }
         })
+        .catch(err => console.log(err));
     })
 
     // update / add the code
 
-    socket.on('update code', (url, xml, css, js) => {
+    socket.on('update code', (text) => {
         // send code to the channel
-        socket.in(url).emit("updated code", xml, css, js);
+        console.log('code recieved', text.url);
+        socket.in(text.url).emit("updated code", text);
     })
 
 
