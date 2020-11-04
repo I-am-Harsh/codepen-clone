@@ -46,7 +46,11 @@ io.on('connection', (socket) => {
             else{
                 // create a new channel
                 socket.emit('creating new');
-                socket.join(url, () => console.log("joined new : ", url))
+                Code.create({url})
+                .then(result => {
+                    console.log("Saved to DB");
+                    socket.join(url, () => console.log("joined new : ", url))
+                })
             }
         })
         .catch(err => console.log(err));
