@@ -91,6 +91,17 @@ body {
   border-top-right-radius: 10px;
 }
 
+.button-1{
+  background-color: #333642;
+  color: white;
+  width: 50%;
+}
+
+.button-1:hover{
+  color: bisque;
+  background-color: teal;
+}
+
 
 
 

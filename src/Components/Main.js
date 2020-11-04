@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-// import { ResizableBox, Resizable } from 'react-resizable';
 import io from 'socket.io-client';
 import  debounce  from "lodash/debounce";
 
@@ -49,10 +48,9 @@ class Main extends Component {
                 break;
         }
 
-        const { xml, css, js } = this.state;
-        // console.log(xml);
-        const url = this.url;
-        this.socket.emit('update code', ({url, xml, css, js}))
+        // const { xml, css, js } = this.state;
+        // const url = this.url;
+        // this.socket.emit('update code', ({url, xml, css, js}))
     }
 
     componentDidMount(){
@@ -61,20 +59,20 @@ class Main extends Component {
 
         // dial connection
         this.socket = io.connect(process.env.REACT_APP_API || window.location.hostname + ":9000");
-        console.log(this.socket);
+        // console.log(this.socket);
 
         // check url with server
         this.socket.emit('checkUrl', window.location.pathname.substr(6))
 
         // get updated code - 
-        this.socket.on('updated code', (text) => {
-            console.log(text);
-            this.setState({
-                xml : text.xml,
-                css : text.css,
-                js : text.js
-            })
-        })
+        // this.socket.on('updated code', (text) => {
+        //     console.log(text);
+        //     this.setState({
+        //         xml : text.xml,
+        //         css : text.css,
+        //         js : text.js
+        //     })
+        // })
 
     }
 
@@ -88,9 +86,9 @@ class Main extends Component {
                     <Route exact path = '/code/*'>
                     <div className = 'main'>
                         <div className = 'editor-outer'>
-                            <Editor handleCodeChange = {this.debounceChange} language = "xml" title = "HTML" />
-                            <Editor handleCodeChange = {this.debounceChange} language = 'css' title = "CSS" />
-                            <Editor handleCodeChange = {this.debounceChange} language = 'js' title = "JS" />
+                            <Editor handleCodeChange = {this.debounceChange} socket = {this.socket} language = "xml" title = "HTML" />
+                            <Editor handleCodeChange = {this.debounceChange} socket = {this.socket} language = 'css' title = "CSS" />
+                            <Editor handleCodeChange = {this.debounceChange} socket = {this.socket} language = 'js' title = "JS" />
                         </div>
                         <div className = 'output'>
                             <Output xml = {xml} css = {css} js = {js}/>
@@ -108,8 +106,8 @@ export default Main;
 
 
 
-steps -->
-1. connect to socket
-2. pass it down to each Editor
-3. inside the editor, maintain state on the basis of language
-4. emit separate code to individual lang channel
+// steps -->
+// 1. connect to socket
+// 2. pass it down to each Editor
+// 3. inside the editor, maintain state on the basis of language
+// 4. emit separate code to individual lang channel

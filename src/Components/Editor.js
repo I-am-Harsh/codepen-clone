@@ -1,63 +1,73 @@
-import React, { useState} from 'react';
-import { UnControlled } from 'react-codemirror2';
+import React from 'react';
+import { Controlled } from 'react-codemirror2';
 
 
 import { xml, css } from '../basicCode';
 
 // 8120100314
-const Editor = (props) => {
-    const { title, language } = props;
-    const code = () => {
+class Editor extends React.Component {
+
+    constructor(props){
+        super(props);
+        this.state = {
+            title : props.title,
+            code : ""
+        }
+    }
+    // const { title, language } = props;
+    code = () => {
+        const { language } = this.props;
         if(language === "xml"){
-            return xml;
+            this.setState({
+                code : xml
+            })
         }
         else if(language === "css"){
-            return css;
-        }
-        else{
-            return "";
+            this.setState({
+                code : css
+            })
         }
     } 
 
-    const [className, setClassName]  = useState('editor-container');
+    handleChange = (editor, data, value) => {
+        this.setState({
+            code : value
+        })
 
-
-    const minimize = () => {
-        console.log('minimized');
-        if(className === 'editor-container'){
-            setClassName('editor-container min')
-        }
-        else{
-            setClassName('editor-container')
-        }
+        // for output
+        this.props.handleCodeChange(this.props.language, value);
     }
 
-    const handleChange = (editor, data, value) => {
-        props.handleCodeChange(language, value);
+    componentDidMount(){
+        this.code();
     }
 
-    return(
-        <div className = {className}>
-            <div className = 'editor-header pl-3'>
-                {title}
-                {/* <button className = 'button' onClick = {minimize}>-</button> */}
+    render(){
+        const {title, language} = this.props;
+        const { code } = this.state;
+        return(
+            <div className = "editor-container">
+                <div className = 'editor-header pl-3'>
+                    {title}
+                    {/* <button className = 'button' onClick = {minimize}>-</button> */}
+                </div>
+                <div className = 'editor-body'>
+                    <Controlled
+                        onBeforeChange = {(editor, data, value) => this.handleChange(editor, data, value)}
+                        className = 'code-mirror-wrapper'
+                        options = {{
+                            lineWrapping : true,
+                            lint : true,
+                            mode : language,
+                            lineNumbers : true,
+                            theme : "material"
+                        }}
+                        value = {code}
+                    />
+                </div>
             </div>
-            <div className = 'editor-body'>
-                <UnControlled
-                    onChange = {(editor, data, value) => handleChange(editor, data, value)}
-                    className = 'code-mirror-wrapper'
-                    options = {{
-                        lineWrapping : true,
-                        lint : true,
-                        mode : language,
-                        lineNumbers : true,
-                        theme : "material"
-                    }}
-                    value = {code()}
-                />
-            </div>
-        </div>
-    )
+        )
+    }
 }
 
 export default Editor;
