@@ -6,7 +6,6 @@ import  debounce  from "lodash/debounce";
 import Editor from "./Editor";
 import Output from "./Output";
 import Landing from './Landing';
-import Test from "./TestComp";
 
 import {css, xml} from '../basicCode';
 
@@ -23,24 +22,30 @@ class Main extends Component {
 
 
     handleCodeChange = (lang, code) => {
-        console.log('fucntion called');
+        const data = {};
+        data.code = code;
+        data.url = this.url;
+
         switch(true){
             case (lang === 'xml'):
                 this.setState({
                     xml : code
                 })
+                this.socket.emit('xml', data);
                 break;
 
             case (lang === 'css'):
                 this.setState({
                     css : code
                 })
+                this.socket.emit('css', data);
                 break;
 
             case (lang === 'js'):
                 this.setState({
                     js : code
                 })
+                this.socket.emit('js', data);
                 break;
 
             default :
@@ -58,44 +63,46 @@ class Main extends Component {
         this.url = window.location.pathname.substr(6);
 
         // dial connection
-        this.socket = io.connect(process.env.REACT_APP_API || window.location.hostname + ":9000");
-        // console.log(this.socket);
+        this.socket = io.connect(process.env.REACT_APP_API || window.location.hostname + ":9000", {
+            reconnectionDelay : 5000
+        });
 
-        // check url with server
-        this.socket.emit('checkUrl', window.location.pathname.substr(6))
+        // on disconnect
+        this.socket.on('disconnect', () => {
+            alert('Connection to the server lost');
+        })
 
-        // get updated code - 
-        // this.socket.on('updated code', (text) => {
-        //     console.log(text);
-        //     this.setState({
-        //         xml : text.xml,
-        //         css : text.css,
-        //         js : text.js
-        //     })
-        // })
-
+        this.socket.on('xml', code => {
+            this.setState({xml : xml});
+        })
     }
 
 
     render() {
+        console.log(this.socket);
         const { xml, css, js } = this.state;
         return (
             <BrowserRouter>
                 <Switch>
                     <Route exact path = '/' component = {(props) => <Landing {...props}/> }/>
-                    <Route exact path = '/code/*'>
-                    <div className = 'main'>
-                        <div className = 'editor-outer'>
-                            <Editor handleCodeChange = {this.debounceChange} socket = {this.socket} language = "xml" title = "HTML" />
-                            <Editor handleCodeChange = {this.debounceChange} socket = {this.socket} language = 'css' title = "CSS" />
-                            <Editor handleCodeChange = {this.debounceChange} socket = {this.socket} language = 'js' title = "JS" />
+                    <Route exact path = '/code/*' {...this.props} >
+                        <div className = 'main'>
+                            <div className = 'editor-outer'>
+                                <Editor handleCodeChange = {this.debounceChange}  language = "xml" title = "HTML" />
+                                <Editor handleCodeChange = {this.debounceChange}  language = 'css' title = "CSS" />
+                                <Editor handleCodeChange = {this.debounceChange}  language = 'js' title = "JS" />
+                            </div>
+                            <div className = 'output'>
+                                <Output xml = {xml} css = {css} js = {js}/>
+                            </div>
                         </div>
-                        <div className = 'output'>
-                            <Output xml = {xml} css = {css} js = {js}/>
-                        </div>
-                    </div>
                     </Route>
-                    <Route exact path = '/test' component = {Test}/>
+                    <Route path = '/test' render = {(props) => {
+                        console.log(this.socket);
+                        return(
+                            <Editor socket = {this.socket}/>
+                        )
+                    }}/>
                 </Switch>
             </BrowserRouter>
         )

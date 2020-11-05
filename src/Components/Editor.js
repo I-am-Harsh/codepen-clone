@@ -40,6 +40,10 @@ class Editor extends React.Component {
 
     componentDidMount(){
         this.code();
+
+        // check url with server
+        // this.props.socket.emit('checkUrl', window.location.pathname.substr(6));
+        console.log(this.props);
     }
 
     render(){

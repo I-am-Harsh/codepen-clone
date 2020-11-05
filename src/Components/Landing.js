@@ -12,14 +12,14 @@ const Landing = (props) => {
 
     return (
         <div>
-            <div class="header">
+            <div className="header">
                 <h1>Web Editor</h1>
                 <p>Develop website on the go</p>
                     <button className = 'btn button-1' onClick = {buttonClick}>
                     Start Coding
                 </button>
             </div>
-            <div class="content">
+            <div className="content">
                 <h2>Features</h2>
                 <ul>
                     <li>Create HTML, CSS, JS documents on the fly</li>

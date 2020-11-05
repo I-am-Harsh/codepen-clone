@@ -58,10 +58,16 @@ io.on('connection', (socket) => {
 
     // update / add the code
 
-    socket.on('update code', (text) => {
-        // send code to the channel
-        console.log('code recieved', text.url);
-        socket.in(text.url).emit("updated code", text);
+    socket.on('xml', (data) => {
+        socket.emit('updated xml', data);
+    })
+
+    socket.on('css', (data) => {
+        socket.emit('updated css', data);
+    })
+
+    socket.on('js', (data) => {
+        socket.emit('updated js', data);
     })
 
 
