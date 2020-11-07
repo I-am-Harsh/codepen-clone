@@ -2,7 +2,7 @@ var express = require('express');
 var socket = require('socket.io');
 var mongoose = require('mongoose');
 var Code = require('./model');
-
+require('log-timestamp');
 
 var app = express();
 var server = app.listen(process.env.PORT || 9000, () => console.log('Server Started'));
@@ -35,21 +35,19 @@ io.on('connection', (socket) => {
 
             // if found
             if(result != null){
-                // emit url found
-                socket.emit('found');
-
                 // join a channel
                 socket.join(url, () => {
-                    console.log("Joined : ",url);
+                    console.log("Joined Old : ",url);
                 })
             }
             else{
                 // create a new channel
-                socket.emit('creating new');
+                // socket.emit('creating new');
                 Code.create({url})
                 .then(result => {
-                    console.log("Saved to DB");
-                    socket.join(url, () => console.log("joined new : ", url))
+                    socket.join(url, () => {
+                        console.log("Joined new : ", url);
+                    })
                 })
             }
         })
@@ -59,15 +57,18 @@ io.on('connection', (socket) => {
     // update / add the code
 
     socket.on('xml', (data) => {
-        socket.emit('updated xml', data);
+        console.log('updated xml', socket.id);
+        socket.to(data.url).emit('updated xml', data);
     })
 
     socket.on('css', (data) => {
-        socket.emit('updated css', data);
+        console.log('updates css');
+        socket.to(data.url).emit('updated css', data);
     })
 
     socket.on('js', (data) => {
-        socket.emit('updated js', data);
+        console.log('updates js')
+        socket.to(data.url).emit('updated js', data);
     })
 
 

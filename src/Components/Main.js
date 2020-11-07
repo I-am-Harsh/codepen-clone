@@ -9,6 +9,8 @@ import Landing from './Landing';
 
 import {css, xml} from '../basicCode';
 
+var socket;
+
 class Main extends Component {
     constructor(props) {
         super(props);
@@ -18,68 +20,66 @@ class Main extends Component {
             js : undefined
         }
         this.debounceChange = debounce(this.handleCodeChange, 500);
+
+        socket = io.connect(process.env.REACT_APP_API || window.location.hostname + ":9000", {
+            reconnectionDelay : 5000
+        });
+    }
+
+    componentDidUpdate(){
+        // console.log('main update');
     }
 
 
-    handleCodeChange = (lang, code) => {
+    handleCodeChange = (lang, code, emit) => {
         const data = {};
         data.code = code;
-        data.url = this.url;
-
+        data.url = window.location.pathname.substr(6);
         switch(true){
             case (lang === 'xml'):
                 this.setState({
                     xml : code
                 })
-                this.socket.emit('xml', data);
+                if(emit){
+                    socket.emit('xml', data);
+                }
                 break;
 
             case (lang === 'css'):
                 this.setState({
                     css : code
                 })
-                this.socket.emit('css', data);
+                if(emit){
+                    socket.emit('css', data);
+                }
                 break;
 
             case (lang === 'js'):
                 this.setState({
                     js : code
                 })
-                this.socket.emit('js', data);
+                if(emit){
+                    socket.emit('js', data);
+                }
                 break;
 
             default :
-                console.log('default');
                 break;
         }
-
-        // const { xml, css, js } = this.state;
-        // const url = this.url;
-        // this.socket.emit('update code', ({url, xml, css, js}))
     }
 
     componentDidMount(){
         // current window url
-        this.url = window.location.pathname.substr(6);
-
-        // dial connection
-        this.socket = io.connect(process.env.REACT_APP_API || window.location.hostname + ":9000", {
-            reconnectionDelay : 5000
-        });
+        console.log('main mount');
 
         // on disconnect
-        this.socket.on('disconnect', () => {
+        socket.on('disconnect', () => {
             alert('Connection to the server lost');
-        })
-
-        this.socket.on('xml', code => {
-            this.setState({xml : xml});
         })
     }
 
 
     render() {
-        console.log(this.socket);
         const { xml, css, js } = this.state;
         return (
             <BrowserRouter>
@@ -88,21 +88,15 @@ class Main extends Component {
                     <Route exact path = '/code/*' {...this.props} >
                         <div className = 'main'>
                             <div className = 'editor-outer'>
-                                <Editor handleCodeChange = {this.debounceChange}  language = "xml" title = "HTML" />
-                                <Editor handleCodeChange = {this.debounceChange}  language = 'css' title = "CSS" />
-                                <Editor handleCodeChange = {this.debounceChange}  language = 'js' title = "JS" />
+                                <Editor handleCodeChange = {this.debounceChange} 
+                                    recievedCode = {this.recievedCode}
+                                />
                             </div>
                             <div className = 'output'>
                                 <Output xml = {xml} css = {css} js = {js}/>
                             </div>
                         </div>
                     </Route>
-                    <Route path = '/test' render = {(props) => {
-                        console.log(this.socket);
-                        return(
-                            <Editor socket = {this.socket}/>
-                        )
-                    }}/>
                 </Switch>
             </BrowserRouter>
         )
@@ -110,11 +104,4 @@ class Main extends Component {
 }
 
 export default Main;
-
-
-
-// steps -->
-// 1. connect to socket
-// 2. pass it down to each Editor
-// 3. inside the editor, maintain state on the basis of language
-// 4. emit separate code to individual lang channel
+export { socket };

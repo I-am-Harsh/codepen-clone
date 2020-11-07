@@ -1,8 +1,8 @@
 import React from 'react';
 import { Controlled } from 'react-codemirror2';
 
-
 import { xml, css } from '../basicCode';
+import { socket } from './Main';
 
 // 8120100314
 class Editor extends React.Component {
@@ -11,65 +11,118 @@ class Editor extends React.Component {
         super(props);
         this.state = {
             title : props.title,
-            code : ""
+            xml : xml,
+            css : css,
+            js : ""
         }
     }
-    // const { title, language } = props;
-    code = () => {
-        const { language } = this.props;
-        if(language === "xml"){
-            this.setState({
-                code : xml
-            })
-        }
-        else if(language === "css"){
-            this.setState({
-                code : css
-            })
-        }
-    } 
+ 
 
     handleChange = (editor, data, value) => {
-        this.setState({
-            code : value
-        })
-
+        if(editor.options.mode === 'xml'){
+            this.setState({xml : value});
+        }
+        else if(editor.options.mode === 'css'){
+            this.setState({css : value});
+        }
+        else{
+            this.setState({js : value})
+        }
+        const emit = true;
         // for output
-        this.props.handleCodeChange(this.props.language, value);
+        this.props.handleCodeChange(editor.options.mode, value, emit);
     }
 
     componentDidMount(){
-        this.code();
-
         // check url with server
-        // this.props.socket.emit('checkUrl', window.location.pathname.substr(6));
-        console.log(this.props);
+        socket.emit('checkUrl', window.location.pathname.substr(6));
+
+        socket.on('updated xml', data => {
+            this.setState({
+                xml : data.code
+            })
+            this.props.handleCodeChange("xml", data.code, false);
+        })
+
+        socket.on('updated css', data => {
+            this.setState({
+                css : data.code
+            })
+            this.props.handleCodeChange("css", data.code, false);
+        })
+
+        socket.on('updated js', data => {
+            this.setState({
+                js : data.code
+            })
+            this.props.handleCodeChange("js", data.code, false);
+        })
+
     }
 
     render(){
-        const {title, language} = this.props;
-        const { code } = this.state;
+        // const {title, language} = this.props;
+        const { xml, css, js } = this.state;
         return(
+            <React.Fragment>
+                <div className = "editor-container">
+                    <div className = 'editor-header pl-3'>
+                        HTML
+                    </div>
+                    <div className = 'editor-body'> 
+                        <Controlled 
+                            onBeforeChange = {(editor, data, value) => this.handleChange(editor, data, value)}
+                            className = 'code-mirror-wrapper'
+                            options = {{
+                                lineWrapping : true,
+                                lint : true,
+                                mode : "xml",
+                                lineNumbers : true,
+                                theme : "material"
+                            }}
+                            value = {xml}
+                        />
+                    </div>
+                </div>
+                <div className = "editor-container">
+                    <div className = 'editor-header pl-3'>
+                        CSS
+                    </div>
+                    <div className = 'editor-body'> 
+                        <Controlled
+                            onBeforeChange = {(editor, data, value) => this.handleChange(editor, data, value)}
+                            className = 'code-mirror-wrapper'
+                            options = {{
+                                lineWrapping : true,
+                                lint : true,
+                                mode : "css",
+                                lineNumbers : true,
+                                theme : "material"
+                            }}
+                            value = {css}
+                        />
+                    </div>
+                </div>
             <div className = "editor-container">
                 <div className = 'editor-header pl-3'>
-                    {title}
-                    {/* <button className = 'button' onClick = {minimize}>-</button> */}
+                    JS
                 </div>
-                <div className = 'editor-body'>
+                <div className = 'editor-body'> 
                     <Controlled
                         onBeforeChange = {(editor, data, value) => this.handleChange(editor, data, value)}
                         className = 'code-mirror-wrapper'
                         options = {{
                             lineWrapping : true,
                             lint : true,
-                            mode : language,
+                            mode : "js",
                             lineNumbers : true,
                             theme : "material"
                         }}
-                        value = {code}
+                        value = {js}
                     />
                 </div>
             </div>
+        </React.Fragment>
         )
     }
 }

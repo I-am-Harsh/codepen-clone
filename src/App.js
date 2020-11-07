@@ -6,7 +6,7 @@ import 'codemirror/mode/xml/xml'
 import 'codemirror/mode/javascript/javascript'
 import 'codemirror/mode/css/css'
 
-import NewMain from './Components/NewMain';
+// import NewMain from './Components/NewMain';
 import Main from './Components/Main';
 
 function App() {
