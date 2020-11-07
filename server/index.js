@@ -2,7 +2,10 @@ var express = require('express');
 var socket = require('socket.io');
 var mongoose = require('mongoose');
 var Code = require('./model');
+const { stubObject } = require('lodash');
 require('log-timestamp');
+
+const code = require('./basicCode');
 
 var app = express();
 var server = app.listen(process.env.PORT || 9000, () => console.log('Server Started'));
@@ -26,7 +29,7 @@ var io = socket(server);
 io.on('connection', (socket) => {
 
     // confirm when device connected
-    console.log('Device Connected : ', socket.id);
+    // console.log('Device Connected : ', socket.id);
 
     // check if url exists
     socket.on('checkUrl', (url) => {
@@ -37,14 +40,17 @@ io.on('connection', (socket) => {
             if(result != null){
                 // join a channel
                 socket.join(url, () => {
-                    console.log("Joined Old : ",url);
                     socket.emit('joined old', result);
                 })
+
+                var room = io.sockets.adapter.rooms[url];
+                if(room.length > 1){
+                    io.in(url).emit('user joined', room.length)
+                };
             }
             else{
                 // create a new channel
-                // socket.emit('creating new');
-                Code.create({url})
+                Code.create({url : url, xml : code.xml, css : code.css})
                 .then(result => {
                     socket.join(url, () => {
                         console.log("Joined new : ", url);
@@ -71,11 +77,6 @@ io.on('connection', (socket) => {
         console.log('updates js')
         socket.to(data.url).emit('updated js', data);
     })
-
-    // socket.on('disconnect', () => {
-    //     console.log('disconnected');
-    // })
-
     
     
     // save code

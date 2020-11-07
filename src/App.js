@@ -5,6 +5,7 @@ import 'codemirror/theme/material.css'
 import 'codemirror/mode/xml/xml'
 import 'codemirror/mode/javascript/javascript'
 import 'codemirror/mode/css/css'
+import 'react-toastify/dist/ReactToastify.css';
 
 // import NewMain from './Components/NewMain';
 import Main from './Components/Main';

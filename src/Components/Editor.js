@@ -10,7 +10,6 @@ class Editor extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            title : props.title,
             xml : xml,
             css : css,
             js : ""
@@ -18,6 +17,7 @@ class Editor extends React.Component {
     }
  
 
+    // for updating local state
     handleChange = (editor, data, value) => {
         if(editor.options.mode === 'xml'){
             this.setState({xml : value});
@@ -46,11 +46,12 @@ class Editor extends React.Component {
                 xml : xml,
                 css : css
             })
-
+            // updating code from db
             this.props.updatedFromDB(xml, css, js);
         })
 
 
+        // individual on for updated code and then sedning to src
         socket.on('updated xml', data => {
             this.setState({
                 xml : data.code

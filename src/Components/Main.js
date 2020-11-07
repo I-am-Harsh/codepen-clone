@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import io from 'socket.io-client';
 import  debounce  from "lodash/debounce";
+import { ToastContainer, toast } from 'react-toastify';
 
 import Editor from "./Editor";
 import Output from "./Output";
@@ -21,11 +22,16 @@ class Main extends Component {
         }
         this.debounceChange = debounce(this.handleCodeChange, 500);
 
+        // connecting to server
         socket = io.connect(process.env.REACT_APP_API || window.location.hostname + ":9000", {
-            reconnectionDelay : 5000
+            reconnectionDelay : 10000,
+            reconnectionAttempts : 10,
+            reconnectionDelayMax : 20000,
+            randomizationFactor : .5
         });
     }
 
+    // used qwhen updating from db upon joining old channel
     updatedFromDB = (xml, css, js) => {
         this.setState({
             xml : xml,
@@ -34,8 +40,8 @@ class Main extends Component {
         })
     }
 
+    // debounced function for updating srcDoc
     handleCodeChange = (lang, code, emit) => {
-        console.log('called code change')
         const data = {};
         data.code = code;
         data.url = window.location.pathname.substr(6);
@@ -73,14 +79,38 @@ class Main extends Component {
     }
 
     componentDidMount(){
-        // on disconnect
-        socket.on('disconnect', () => {
-            alert('Connection to the server lost');
+        // show toast;
+        // when someone joins your code channel
+        socket.on('user joined', number => {
+            // console.log(number);
+            return toast.warning(`There are ${number} people here`);
         })
 
-        // when someone joins your code channel
-        // show toast;
-        // send code
+        // when connection failed
+        this.errShown = false;
+        socket.on('connect_error', () => {
+            if(!this.errShown){
+                this.errShown = true;
+                return toast.error("Conenction to server failed");
+            }
+        });
+
+        // if the server connection gets severed
+        socket.on('disconnect', () => {
+            return toast.error('Disconnected from server');
+        })
+
+        // reconnect true toast
+        socket.on('reconnect', () => {
+            return toast.success('Reconnected to server');
+        })
+
+        // when trying to reconenct
+        socket.on("reconnect_attempt", () => {
+            return toast.warning('Attempting to reconnect');
+        })
+
+        // send code when exiting
         const url = window.location.pathname.substr(6);
         window.onbeforeunload = () =>{
             socket.emit('closed', {code : this.state, url : url});
@@ -92,6 +122,7 @@ class Main extends Component {
         const { xml, css, js } = this.state;
         return (
             <BrowserRouter>
+               <ToastContainer limit = {1} autoClose = {3500} />
                 <Switch>
                     <Route exact path = '/' component = {(props) => <Landing {...props}/> }/>
                     <Route exact path = '/code/*' {...this.props} >

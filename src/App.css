@@ -127,3 +127,10 @@ body {
   color: aliceblue;
   width: 50%;
 }
+
+.toast{
+  position: absolute;
+  top: 10%;
+  right: 10%;
+  z-index: 10;
+}
