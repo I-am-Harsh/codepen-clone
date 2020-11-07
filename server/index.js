@@ -30,7 +30,7 @@ io.on('connection', (socket) => {
 
     // check if url exists
     socket.on('checkUrl', (url) => {
-        Code.findOne({ url : url})
+        Code.findOne({ url : url}).lean()
         .then(result => {
 
             // if found
@@ -38,6 +38,7 @@ io.on('connection', (socket) => {
                 // join a channel
                 socket.join(url, () => {
                     console.log("Joined Old : ",url);
+                    socket.emit('joined old', result);
                 })
             }
             else{
@@ -71,8 +72,24 @@ io.on('connection', (socket) => {
         socket.to(data.url).emit('updated js', data);
     })
 
+    // socket.on('disconnect', () => {
+    //     console.log('disconnected');
+    // })
 
+    
+    
     // save code
+    socket.on('closed', (data) => {
+        const { xml, css, js } = data.code;
+        Code.updateOne({url : data.url}, { $set : {
+            js  : js,
+            xml : xml,
+            css : css
+        }})
+        .then(result => {
+            console.log(result);
+        })
+    });
     
 
 

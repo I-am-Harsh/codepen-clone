@@ -37,6 +37,20 @@ class Editor extends React.Component {
         // check url with server
         socket.emit('checkUrl', window.location.pathname.substr(6));
 
+
+        // joined old
+        socket.on('joined old', result => {
+            const {xml, js, css} = result
+            this.setState({
+                js : js,
+                xml : xml,
+                css : css
+            })
+
+            this.props.updatedFromDB(xml, css, js);
+        })
+
+
         socket.on('updated xml', data => {
             this.setState({
                 xml : data.code

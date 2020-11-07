@@ -26,12 +26,16 @@ class Main extends Component {
         });
     }
 
-    componentDidUpdate(){
-        // console.log('main update');
+    updatedFromDB = (xml, css, js) => {
+        this.setState({
+            xml : xml,
+            css : css,
+            js : js
+        })
     }
 
-
     handleCodeChange = (lang, code, emit) => {
+        console.log('called code change')
         const data = {};
         data.code = code;
         data.url = window.location.pathname.substr(6);
@@ -69,15 +73,20 @@ class Main extends Component {
     }
 
     componentDidMount(){
-        // current window url
-        console.log('main mount');
-
         // on disconnect
         socket.on('disconnect', () => {
             alert('Connection to the server lost');
         })
-    }
 
+        // when someone joins your code channel
+        // show toast;
+        // send code
+        const url = window.location.pathname.substr(6);
+        window.onbeforeunload = () =>{
+            socket.emit('closed', {code : this.state, url : url});
+            return null;
+        }
+    }
 
     render() {
         const { xml, css, js } = this.state;
@@ -90,6 +99,7 @@ class Main extends Component {
                             <div className = 'editor-outer'>
                                 <Editor handleCodeChange = {this.debounceChange} 
                                     recievedCode = {this.recievedCode}
+                                    updatedFromDB = {this.updatedFromDB}
                                 />
                             </div>
                             <div className = 'output'>
