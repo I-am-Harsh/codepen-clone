@@ -43,6 +43,7 @@ io.on('connection', (socket) => {
                     socket.emit('joined old', result);
                 })
 
+                // check if there are more than one person in room
                 var room = io.sockets.adapter.rooms[url];
                 if(room.length > 1){
                     io.in(url).emit('user joined', room.length)
@@ -64,17 +65,17 @@ io.on('connection', (socket) => {
     // update / add the code
 
     socket.on('xml', (data) => {
-        console.log('updated xml', socket.id);
+        // console.log('updated xml', socket.id);
         socket.to(data.url).emit('updated xml', data);
     })
 
     socket.on('css', (data) => {
-        console.log('updates css');
+        // console.log('updates css');
         socket.to(data.url).emit('updated css', data);
     })
 
     socket.on('js', (data) => {
-        console.log('updates js')
+        // console.log('updates js')
         socket.to(data.url).emit('updated js', data);
     })
     
@@ -91,7 +92,4 @@ io.on('connection', (socket) => {
             console.log(result);
         })
     });
-    
-
-
 })

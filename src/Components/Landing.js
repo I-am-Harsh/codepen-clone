@@ -24,7 +24,9 @@ const Landing = (props) => {
                 <ul>
                     <li>Create HTML, CSS, JS documents on the fly</li>
                     <li>See your changes in real time without refresh</li>
-                    <li>When you are done download the code</li>
+                    <li>Show your work to friends in real time.</li>
+                    <li>Your progress is saved when you leave the site.</li>
+                    <li>Create your own custom link or just tap start coding</li>
                 </ul>
             </div>
         </div>

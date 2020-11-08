@@ -36,6 +36,18 @@ body {
   overflow: hidden;
 }
 
+@media only screen and (max-width: 768px) {
+  .editor-outer {
+    flex-direction: column;
+    height: 100%;
+    scroll-behavior: smooth;
+  }
+
+  .output{
+    height: 100%;
+  }
+}
+
 .output{
   flex-grow: 1;
   flex-basis: auto;
@@ -57,8 +69,8 @@ body {
 
 
 .editor-body{
-  height: 100% !important;
-  padding-bottom: 5%;
+  height: 95% !important;
+  /* margin-bottom: 5%; */
 }
 
 .code-mirror-wrapper{
@@ -85,7 +97,7 @@ body {
 
 
 .button {
-  background-color: rgba(0,0,0,0.5);
+  background-color:rgb(64, 92, 64);
   color : white;
   border: 0px;
   border-top-right-radius: 10px;

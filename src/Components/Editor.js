@@ -1,7 +1,7 @@
 import React from 'react';
 import { Controlled } from 'react-codemirror2';
 
-import { xml, css } from '../basicCode';
+import { xml, css, js } from '../basicCode';
 import { socket } from './Main';
 
 // 8120100314
@@ -12,7 +12,7 @@ class Editor extends React.Component {
         this.state = {
             xml : xml,
             css : css,
-            js : ""
+            js : js
         }
     }
  
@@ -75,6 +75,10 @@ class Editor extends React.Component {
 
     }
 
+    downloadCode = () => {
+        socket.emit('download', (this.state));
+    }
+
     render(){
         // const {title, language} = this.props;
         const { xml, css, js } = this.state;
@@ -83,6 +87,8 @@ class Editor extends React.Component {
                 <div className = "editor-container">
                     <div className = 'editor-header pl-3'>
                         HTML
+                        {/* <button>Save</button> */}
+                        {/* <button className = 'button'>Download</button> */}
                     </div>
                     <div className = 'editor-body'> 
                         <Controlled 
@@ -129,7 +135,7 @@ class Editor extends React.Component {
                         options = {{
                             lineWrapping : true,
                             lint : true,
-                            mode : "js",
+                            mode : "javascript",
                             lineNumbers : true,
                             theme : "material"
                         }}

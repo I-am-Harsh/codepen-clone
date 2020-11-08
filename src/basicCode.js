@@ -35,3 +35,6 @@ export const css =
     padding:20px;
 }
 `
+
+export const js = `const el = document.getElementsByClassName('content');
+el[0].style.padding = "20px";`

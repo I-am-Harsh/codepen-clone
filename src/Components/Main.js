@@ -8,7 +8,7 @@ import Editor from "./Editor";
 import Output from "./Output";
 import Landing from './Landing';
 
-import {css, xml} from '../basicCode';
+import {css, js, xml} from '../basicCode';
 
 var socket;
 
@@ -18,7 +18,7 @@ class Main extends Component {
         this.state = {
             xml : xml,
             css : css,
-            js : undefined
+            js : js
         }
         this.debounceChange = debounce(this.handleCodeChange, 500);
 
@@ -82,7 +82,6 @@ class Main extends Component {
         // show toast;
         // when someone joins your code channel
         socket.on('user joined', number => {
-            // console.log(number);
             return toast.warning(`There are ${number} people here`);
         })
 
@@ -96,24 +95,36 @@ class Main extends Component {
         });
 
         // if the server connection gets severed
+        this.disconnected = false;
         socket.on('disconnect', () => {
+            this.disconnected = true;
             return toast.error('Disconnected from server');
         })
 
         // reconnect true toast
         socket.on('reconnect', () => {
+            this.errShown = false;
+            this.reconnectShown = false;
             return toast.success('Reconnected to server');
         })
 
         // when trying to reconenct
+        this.reconnectShown = false;
         socket.on("reconnect_attempt", () => {
-            return toast.warning('Attempting to reconnect');
+            if(!this.reconnectShown){
+                this.reconnectShown = true;
+                return toast.warning('Attempting to reconnect');
+            }
         })
 
         // send code when exiting
         const url = window.location.pathname.substr(6);
         window.onbeforeunload = () =>{
             socket.emit('closed', {code : this.state, url : url});
+            // alert('wait ra');
+            if(this.disconnected) {
+                return ('Your content wont be saved till you reconnect');
+            }
             return null;
         }
     }
